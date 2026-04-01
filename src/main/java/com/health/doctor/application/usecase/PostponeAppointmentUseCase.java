@@ -5,6 +5,9 @@ import com.health.doctor.domain.model.AppointmentStatus;
 import com.health.doctor.domain.ports.AppointmentRepositoryPort;
 import jakarta.inject.Singleton;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Singleton
@@ -16,6 +19,18 @@ public class PostponeAppointmentUseCase {
     }
 
     public void execute(Appointment appointment){
-        repo.updateStatus(appointment, AppointmentStatus.POSTPONED.name());
+        LocalDate newDate = appointment.getAppointmentDate().plusDays(1);
+
+        Appointment postponed = new Appointment(
+                appointment.getId(),
+                appointment.getDoctorId(),
+                appointment.getPatientId(),
+                newDate,
+                appointment.getScheduleTime(),
+                AppointmentStatus.POSTPONED,
+                appointment.getCreatedAt(),
+                ZonedDateTime.now(ZoneId.of("Asia/Kathmandu")).toInstant()
+        );
+        repo.updateStatus(postponed, AppointmentStatus.POSTPONED.name());
     }
 }

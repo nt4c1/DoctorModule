@@ -11,6 +11,8 @@ import io.micronaut.http.annotation.*;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 
+import javax.print.Doc;
+import java.util.List;
 import java.util.UUID;
 
 @Controller("/doctor")
@@ -72,6 +74,15 @@ public class DoctorController {
     @Get("/search")
     public Object search(@QueryValue String geohashPrefix) {
         return searchUseCase.execute(geohashPrefix)
+                .stream()
+                .map(DoctorMapper::toResponse)
+                .toList();
+    }
+
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @Get("/searchnear")
+    public Object searcher(@QueryValue String location) {
+        return searchUseCase.executeNear(location)
                 .stream()
                 .map(DoctorMapper::toResponse)
                 .toList();

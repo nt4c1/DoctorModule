@@ -8,6 +8,8 @@ import com.health.doctor.domain.ports.AppointmentRepositoryPort;
 import jakarta.inject.Singleton;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Singleton
@@ -120,36 +122,50 @@ public class AppointmentRepositoryImpl implements AppointmentRepositoryPort {
     @Override
     public void updateStatus(Appointment a, String newStatus) {
 
-        // update main table
+        // Delete old row (can't update primary key in Cassandra)
         session.execute(
-                "UPDATE doctor_service.appointments_by_doctor SET status=? " +
+                "DELETE FROM doctor_service.appointments_by_doctor " +
                         "WHERE doctor_id=? AND appointment_date=? AND scheduled_time=? AND appointment_id=?",
-                newStatus,
                 a.getDoctorId(),
-                a.getAppointmentDate(),
+                a.getAppointmentDate().minusDays(1), // ← old date
                 a.getScheduleTime(),
                 a.getId()
         );
 
-        // delete old status row
+        // Insert new row with new date
+        session.execute(
+                "INSERT INTO doctor_service.appointments_by_doctor " +
+                        "(doctor_id, appointment_date, scheduled_time, appointment_id, patient_id, status, created_at, updated_at) " +
+                        "VALUES (?,?,?,?,?,?,?,?)",
+                a.getDoctorId(),
+                a.getAppointmentDate(), // ← new date
+                a.getScheduleTime(),
+                a.getId(),
+                a.getPatientId(),
+                newStatus,
+                a.getCreatedAt(),
+                ZonedDateTime.now(ZoneId.of("Asia/Kathmandu")).toInstant()
+        );
+
+        // Delete old status row
         session.execute(
                 "DELETE FROM doctor_service.appointments_by_doctor_status " +
                         "WHERE doctor_id=? AND status=? AND appointment_date=? AND scheduled_time=? AND appointment_id=?",
                 a.getDoctorId(),
                 a.getStatus().name(),
-                a.getAppointmentDate(),
+                a.getAppointmentDate().minusDays(1), // ← old date
                 a.getScheduleTime(),
                 a.getId()
         );
 
-        // insert new status row
+        // Insert new status row with new date
         session.execute(
                 "INSERT INTO doctor_service.appointments_by_doctor_status " +
                         "(doctor_id, status, appointment_date, scheduled_time, appointment_id, patient_id) " +
                         "VALUES (?,?,?,?,?,?)",
                 a.getDoctorId(),
                 newStatus,
-                a.getAppointmentDate(),
+                a.getAppointmentDate(), // ← new date
                 a.getScheduleTime(),
                 a.getId(),
                 a.getPatientId()

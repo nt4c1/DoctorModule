@@ -83,3 +83,14 @@ CREATE TABLE IF NOT EXISTS appointment_count_by_doctor_date (
                                                                 count INT,
                                                                 PRIMARY KEY ((doctor_id, appointment_date))
 );
+-- =========================
+-- DOCTOR'S SCHEDULE
+-- =========================
+CREATE TABLE IF NOT EXISTS doctor_service.doctor_schedules (
+    doctor_id              UUID PRIMARY KEY,
+    working_days           SET<TEXT>,
+    start_time             TIME,
+    end_time               TIME,
+    slot_duration_minutes  INT,
+    max_appointments_day   INT
+);
