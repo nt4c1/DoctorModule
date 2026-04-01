@@ -1,0 +1,6 @@
+applicationType: grpc
+defaultPackage: com.health.doctor
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [app-name, cassandra, data, data-jdbc, discovery-core, gradle, grpc, h2, http-client, java, java-application, jdbc-hikari, junit, junit-platform-suite-engine, kafka, logback, lombok, micronaut-aop, micronaut-build, mockito, properties, readme, redis-lettuce, security, security-annotations, security-jwt, serialization-jackson, shade, test-resources]

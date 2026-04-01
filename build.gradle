@@ -1,0 +1,102 @@
+plugins {
+    id("io.micronaut.application") version "4.6.2"
+    id("com.google.protobuf") version "0.9.2"
+    id("com.gradleup.shadow") version "8.3.9"
+    id("io.micronaut.test-resources") version "4.6.2"
+}
+
+version = "0.1"
+group = "com.health.doctor"
+
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut:micronaut-aop")
+    implementation("io.micronaut:micronaut-discovery-core")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.cassandra:micronaut-cassandra")
+    implementation("io.micronaut.grpc:micronaut-grpc-runtime")
+    implementation("io.micronaut.kafka:micronaut-kafka")
+    implementation("io.micronaut.redis:micronaut-redis-lettuce")
+    implementation("io.micronaut.security:micronaut-security")
+    implementation("io.micronaut.security:micronaut-security-jwt")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("javax.annotation:javax.annotation-api")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    testImplementation("org.junit.platform:junit-platform-suite-engine")
+    testImplementation("org.mockito:mockito-core")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    implementation("ch.hsr:geohash:1.4.0")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut:micronaut-http-server-netty")
+}
+
+
+
+application {
+    mainClass = "com.health.doctor.Application"
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("21")
+    targetCompatibility = JavaVersion.toVersion("21")
+}
+
+
+
+
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs("build/generated/source/proto/main/grpc")
+            srcDirs("build/generated/source/proto/main/java")
+        }
+    }
+}
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:3.25.8" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:1.75.0" }
+    }
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+
+
+
+micronaut {
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("com.health.doctor.*")
+    }
+    testResources {
+        sharedServer = true
+    }
+}
+
+
+tasks.named("dockerfileNative") {
+    jdkVersion = "21"
+}
+
+
+
+
+
+
+
