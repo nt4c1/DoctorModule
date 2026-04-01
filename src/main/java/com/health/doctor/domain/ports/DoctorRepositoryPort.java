@@ -13,4 +13,5 @@ public interface DoctorRepositoryPort {
     Doctor findById(UUID doctorId);
     List<Doctor> findByGeohashPrefix(String prefix);
     List<Doctor> findNearby (String geohash);
+    List<Doctor> findByClinicId(UUID clinicId);
 }

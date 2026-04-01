@@ -22,15 +22,17 @@ public class DoctorController {
     private final CreateClinicUseCase createClinic;
     private final UpdateDoctorLocationUseCase updateLocation;
     private final GetDoctorsByLocationUseCase searchUseCase;
+    private final GetDoctorsByClinicUseCase getDoctorsByClinicUseCase;
 
     public DoctorController(
             CreateDoctorUseCase createDoctor, CreateClinicUseCase createClinic, UpdateDoctorLocationUseCase updateLocation,
-            GetDoctorsByLocationUseCase searchUseCase) {
+            GetDoctorsByLocationUseCase searchUseCase, GetDoctorsByClinicUseCase getDoctorsByClinicUseCase) {
         this.createDoctor = createDoctor;
         this.createClinic = createClinic;
 
         this.updateLocation = updateLocation;
         this.searchUseCase = searchUseCase;
+        this.getDoctorsByClinicUseCase = getDoctorsByClinicUseCase;
     }
 
     // Create Doctor
@@ -86,5 +88,11 @@ public class DoctorController {
                 .stream()
                 .map(DoctorMapper::toResponse)
                 .toList();
+    }
+
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @Get("/clinic/{clinicId}")
+    public List<Doctor> getByClinic(@PathVariable UUID clinicId) {
+        return getDoctorsByClinicUseCase.execute(clinicId);
     }
 }

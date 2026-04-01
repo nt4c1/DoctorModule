@@ -37,6 +37,12 @@ public class DoctorRepositoryImpl implements DoctorRepositoryPort {
                 d.getSpecialization(),
                 d.isActive()
         );
+
+        session.execute(
+                "INSERT INTO doctor_service.doctors_by_clinic (clinic_id, doctor_id, name, type, specialization, is_active) VALUES (?,?,?,?,?,?)",
+                d.getClinicId(), d.getId(), d.getName(),
+                d.getType().name(), d.getSpecialization(), d.isActive()
+        );
     }
 
     @Override
@@ -104,9 +110,9 @@ public class DoctorRepositoryImpl implements DoctorRepositoryPort {
         GeoHash[] neighbors = center.getAdjacent();
 
         Set<String> prefixes = new HashSet<>();
-        prefixes.add(center.toBase32().substring(0,5));
+        prefixes.add(center.toBase32().substring(0, 5));
         for (GeoHash neighbor : neighbors) {
-            prefixes.add(neighbor.toBase32().substring(0,5));
+            prefixes.add(neighbor.toBase32().substring(0, 5));
         }
 
         log.info("Searching geohash prefixes: {}", prefixes);
@@ -123,6 +129,27 @@ public class DoctorRepositoryImpl implements DoctorRepositoryPort {
                         null, null, null, null, true
                 ));
             }
+        }
+        return list;
+    }
+
+    @Override
+    public List<Doctor> findByClinicId(UUID clinicId) {
+        ResultSet rs = session.execute(
+                "SELECT * FROM doctor_service.doctors_by_clinic WHERE clinic_id=?",
+                clinicId
+        );
+
+        List<Doctor> list = new ArrayList<>();
+        for (Row r : rs) {
+            list.add(new Doctor(
+                    r.getUuid("doctor_id"),
+                    r.getString("name"),
+                    clinicId,
+                    DoctorType.valueOf(r.getString("type")),
+                    r.getString("specialization"),
+                    r.getBoolean("is_active")
+            ));
         }
         return list;
     }
