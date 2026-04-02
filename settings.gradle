@@ -1,8 +1,5 @@
+rootProject.name = "doctor"
 
 
-
-
-
-
-rootProject.name="doctor"
-
+include 'DoctorModule'
+include 'PatientModule'

@@ -1,102 +1,211 @@
-## Micronaut 4.10.10 Documentation
+cqlsh -f schema.cql
+```
 
-- [User Guide](https://docs.micronaut.io/4.10.10/guide/index.html)
-- [API Reference](https://docs.micronaut.io/4.10.10/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/4.10.10/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
 ---
 
-- [Protobuf Gradle Plugin](https://plugins.gradle.org/plugin/com.google.protobuf)
-- [Micronaut Gradle Plugin documentation](https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/)
-- [GraalVM Gradle Plugin documentation](https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html)
-- [Shadow Gradle Plugin](https://gradleup.com/shadow/)
-## Feature test-resources documentation
+### Step 3 — Run Doctor Module in IntelliJ
 
+1. Open `DoctorModule/src/main/java/com/health/doctor/Application.java`
+2. Right-click → **Run 'Application'**
+3. Wait for:
+```
+Server Running: http://localhost:8080
+GRPC started on port 50051
+```
 
-- [Micronaut Test Resources documentation](https://micronaut-projects.github.io/micronaut-test-resources/latest/guide/)
+---
 
+### Step 4 — Run Patient Module in IntelliJ
 
-## Feature http-client documentation
+1. Open `PatientModule/src/main/java/com/health/patient/Application.java`
+2. Right-click → **Run 'Application'**
+3. Wait for:
+```
+Server Running: http://localhost:8081
+GRPC started on port 50053
+```
 
+Both must be running at the same time — they run as separate processes.
 
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#nettyHttpClient)
+---
 
+## Postman Testing — Exact Order
 
-## Feature discovery-core documentation
+### 1. Create Clinic (Doctor Module)
+```
+POST http://localhost:8080/doctor/cclinic
+Content-Type: application/json
 
+{
+"name": "Kathmandu Clinic",
+"locationText": "Kathmandu"
+}
+```
+→ Save the returned `clinicId`
 
-- [Micronaut Discovery Core documentation](https://micronaut-projects.github.io/micronaut-discovery-client/latest/guide/)
+---
 
+### 2. Create Doctor (Doctor Module)
+```
+POST http://localhost:8080/doctor/cdoctor
+Content-Type: application/json
 
-## Feature kafka documentation
+{
+"name": "Dr. Ram",
+"clinicId":"From the Above,
+"specialization": "Physian",
+"type": "CLINIC_DOCTOR"
+}
+```
 
+else for individual 
+{
+    "name": "Dr. Ram",
+    "clinicId":"",
+    "specialization": "Physian",
+    "type": "INDIVIDUAL"
+}
 
-- [Micronaut Kafka Messaging documentation](https://micronaut-projects.github.io/micronaut-kafka/latest/guide/index.html)
+→ Save the returned `doctorId`
 
+---
 
-## Feature jdbc-hikari documentation
+### 3. Update Doctor Location (Doctor Module)
+```
+POST http://localhost:8080/doctor/<doctorId>/location
+Content-Type: application/json
 
+{
+"locationText": "Kathmandu"
+}
+```
 
-- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
+---
 
+### 4. Create Doctor Schedule (Doctor Module)
+```
+POST http://localhost:8080/doctor/schedule
+Content-Type: application/json
 
-## Feature cassandra documentation
+{
+"doctorId": "<doctorId>",
+"workingDays": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"],
+"startTime": "09:00:00",
+"endTime": "17:00:00",
+"slotDurationMinutes": 30,
+"maxAppointmentsPerDay": 50
+}
+```
 
+---
 
-- [Micronaut Cassandra Driver documentation](https://micronaut-projects.github.io/micronaut-cassandra/latest/guide/index.html)
+### 5. Create Patient (Patient Module)
+```
+POST http://localhost:8081/patient
+Content-Type: application/json
 
+{
+"name": "Ram Bahadur"
+}
+```
+→ Save the returned `patientId`
 
-- [https://docs.datastax.com/en/developer/java-driver/latest/](https://docs.datastax.com/en/developer/java-driver/latest/)
+---
 
+### 6. Get Nearby Doctors (Patient Module → calls Doctor via gRPC)
+```
+GET http://localhost:8081/patient/doctors/nearby?location=Kathmandu
+```
+→ Should return list of doctors
 
-## Feature data-jdbc documentation
+---
 
+### 7. Get Doctor Schedule (Patient Module → calls Doctor via gRPC)
+```
+GET http://localhost:8081/patient/doctors/<doctorId>/schedule
+```
 
-- [Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
+---
 
+### 8. Book Appointment (Patient Module → calls Doctor via gRPC)
+```
+POST http://localhost:8081/patient/appointments
+Content-Type: application/json
 
-## Feature lombok documentation
+{
+"doctorId": "<doctorId>",
+"patientId": "<patientId>",
+"date": "2026-04-07",
+"time": "10:00:00"
+}
+```
+Note: `2026-04-07` is a Monday — must match working days in schedule.
 
+---
 
-- [Micronaut Project Lombok documentation](https://docs.micronaut.io/latest/guide/index.html#lombok)
+### 9. Get My Appointments (Patient Module → calls Doctor via gRPC)
+```
+GET http://localhost:8081/patient/appointments/<patientId>?date=2026-04-07
+```
 
+---
 
-- [https://projectlombok.org/features/all](https://projectlombok.org/features/all)
+### 10. Get Doctor's Appointments (Doctor Module)
+```
+GET http://localhost:8080/appointments/<doctorId>?date=2026-04-07
+```
 
+---
 
-## Feature security-jwt documentation
+### 11. Get Pending Appointments (Doctor Module)
+```
+GET http://localhost:8080/appointments/<doctorId>/pending?date=2026-04-07
+```
 
+---
 
-- [Micronaut Security JWT documentation](https://micronaut-projects.github.io/micronaut-security/latest/guide/index.html)
+### 12. Accept Appointment (Doctor Module)
+```
+POST http://localhost:8080/appointments/status/accept
+Content-Type: application/json
 
+{
+"appointmentId": "<appointmentId>",
+"doctorId": "<doctorId>",
+"patientId": "<patientId>",
+"date": "2026-04-07",
+"time": "10:00:00",
+"currentStatus": "PENDING"
+}
+```
 
-## Feature mockito documentation
+---
 
+### 13. Postpone Appointment (Doctor Module)
+```
+POST http://localhost:8080/appointments/status/postpone
+Content-Type: application/json
 
-- [https://site.mockito.org](https://site.mockito.org)
+{
+"appointmentId": "<appointmentId>",
+"doctorId": "<doctorId>",
+"patientId": "<patientId>",
+"date": "2026-04-07",
+"time": "10:00:00",
+"currentStatus": "PENDING"
+}
+```
+→ Date will automatically shift to `2026-04-08`
 
+---
 
-## Feature micronaut-aop documentation
+### 14. Cancel Appointment (Patient Module → calls Doctor via gRPC)
+```
+DELETE http://localhost:8081/patient/appointments/<appointmentId>?patientId=<patientId>&doctorId=<doctorId>&date=2026-04-07&time=10:00:00
+```
 
+---
 
-- [Micronaut Aspect-Oriented Programming (AOP) documentation](https://docs.micronaut.io/latest/guide/index.html#aop)
-
-
-## Feature junit-platform-suite-engine documentation
-
-
-- [https://junit.org/junit5/docs/current/user-guide/#junit-platform-suite-engine-setup](https://junit.org/junit5/docs/current/user-guide/#junit-platform-suite-engine-setup)
-
-
-## Feature security documentation
-
-
-- [Micronaut Security documentation](https://micronaut-projects.github.io/micronaut-security/latest/guide/index.html)
-
-
-## Feature serialization-jackson documentation
-
-
-- [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
-
-
+### 15. Get Doctors in Same Clinic (Doctor Module)
+```
+GET http://localhost:8080/doctor/clinic/<clinicId>

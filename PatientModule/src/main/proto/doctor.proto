@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+option java_package = "com.health.grpc.doctor";
+option java_outer_classname = "DoctorProto";
+option java_multiple_files = true;
+
+service DoctorGrpcService {
+  rpc GetNearbyDoctors      (NearbyDoctorsRequest)      returns (NearbyDoctorsResponse);
+  rpc GetDoctorsByLocation  (DoctorsByLocationRequest)  returns (DoctorsByLocationResponse);
+  rpc GetDoctorSchedule     (GetScheduleRequest)        returns (GetScheduleResponse);
+  rpc GetAppointments       (GetAppointmentsRequest)    returns (GetAppointmentsResponse);
+  rpc GetPendingAppointments(GetAppointmentsRequest)    returns (GetAppointmentsResponse);
+  rpc AcceptAppointment     (AppointmentActionRequest)  returns (AppointmentActionResponse);
+  rpc PostponeAppointment   (AppointmentActionRequest)  returns (AppointmentActionResponse);
+  rpc UpdateLocation        (UpdateLocationRequest)     returns (UpdateLocationResponse);
+  rpc DoctorExists          (DoctorExistsRequest)       returns (DoctorExistsResponse);
+  rpc CreateAppointment     (CreateAppointmentRequest)  returns (CreateAppointmentResponse);
+  rpc CancelAppointment     (CancelAppointmentRequest)  returns (CancelAppointmentResponse);
+  rpc GetMyAppointments     (GetMyAppointmentsRequest)  returns (GetMyAppointmentsResponse);
+}
+
+message NearbyDoctorsRequest   { string location_text = 1; }
+message NearbyDoctorsResponse  { repeated DoctorMessage doctors = 1; }
+
+message DoctorsByLocationRequest  { string geohash_prefix = 1; }
+message DoctorsByLocationResponse { repeated DoctorMessage doctors = 1; }
+
+message DoctorMessage {
+  string doctor_id      = 1;
+  string name           = 2;
+  string type           = 3;
+  string specialization = 4;
+  bool   is_active      = 5;
+}
+
+message GetScheduleRequest  { string doctor_id = 1; }
+message GetScheduleResponse {
+  string          doctor_id            = 1;
+  repeated string working_days         = 2;
+  string          start_time           = 3;
+  string          end_time             = 4;
+  int32           slot_duration_minutes = 5;
+  int32           max_appointments_day  = 6;
+}
+
+message GetAppointmentsRequest {
+  string doctor_id = 1;
+  string date      = 2;
+}
+message GetAppointmentsResponse { repeated AppointmentMessage appointments = 1; }
+
+message AppointmentMessage {
+  string appointment_id = 1;
+  string doctor_id      = 2;
+  string patient_id     = 3;
+  string date           = 4;
+  string time           = 5;
+  string status         = 6;
+}
+
+message AppointmentActionRequest {
+  string appointment_id = 1;
+  string doctor_id      = 2;
+  string patient_id     = 3;
+  string date           = 4;
+  string time           = 5;
+  string current_status = 6;
+}
+message AppointmentActionResponse { bool success = 1; string message = 2; }
+
+message UpdateLocationRequest  { string doctor_id = 1; string location_text = 2; }
+message UpdateLocationResponse { bool success = 1; }
+
+message DoctorExistsRequest  { string doctor_id = 1; }
+message DoctorExistsResponse { bool exists = 1; }
+
+message CreateAppointmentRequest {
+  string doctor_id  = 1;
+  string patient_id = 2;
+  string date       = 3;
+  string time       = 4;
+}
+message CreateAppointmentResponse { bool success = 1; string message = 2; }
+
+message CancelAppointmentRequest {
+  string appointment_id = 1;
+  string patient_id     = 2;
+  string doctor_id      = 3;
+  string date           = 4;
+  string time           = 5;
+}
+message CancelAppointmentResponse { bool success = 1; string message = 2; }
+
+message GetMyAppointmentsRequest {
+  string patient_id = 1;
+  string date       = 2;
+}
+message GetMyAppointmentsResponse { repeated AppointmentMessage appointments = 1; }
