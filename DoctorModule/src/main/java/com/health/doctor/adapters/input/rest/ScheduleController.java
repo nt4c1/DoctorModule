@@ -1,8 +1,10 @@
 package com.health.doctor.adapters.input.rest;
 
 import com.health.doctor.adapters.input.rest.dto.CreateScheduleRequest;
-import com.health.doctor.application.usecase.CreateScheduleUseCase;
-import com.health.doctor.application.usecase.GetScheduleUseCase;
+import com.health.doctor.application.usecase.implementtion.CreateScheduleUseCase;
+import com.health.doctor.application.usecase.implementtion.GetScheduleUseCase;
+import com.health.doctor.application.usecase.interfaces.CreateScheduleUseCaseInterface;
+import com.health.doctor.application.usecase.interfaces.GetScheduleUseCaseInterface;
 import com.health.doctor.domain.model.DoctorSchedule;
 import io.micronaut.http.annotation.*;
 import io.micronaut.scheduling.TaskExecutors;
@@ -13,8 +15,8 @@ import java.util.UUID;
 @Controller("/schedule")
 public class ScheduleController {
 
-    private final CreateScheduleUseCase createSchedule;
-    private final GetScheduleUseCase getSchedule;
+    private final CreateScheduleUseCaseInterface createSchedule;
+    private final GetScheduleUseCaseInterface getSchedule;
 
     public ScheduleController(CreateScheduleUseCase createSchedule, GetScheduleUseCase getSchedule) {
         this.createSchedule = createSchedule;

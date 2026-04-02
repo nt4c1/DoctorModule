@@ -1,5 +1,6 @@
-package com.health.doctor.application.usecase;
+package com.health.doctor.application.usecase.implementtion;
 
+import com.health.doctor.application.usecase.interfaces.GetScheduleUseCaseInterface;
 import com.health.doctor.domain.model.DoctorSchedule;
 import com.health.doctor.domain.ports.ScheduleRepositoryPort;
 import jakarta.inject.Singleton;
@@ -7,7 +8,7 @@ import jakarta.inject.Singleton;
 import java.util.UUID;
 
 @Singleton
-public class GetScheduleUseCase {
+public class GetScheduleUseCase implements GetScheduleUseCaseInterface {
     private final ScheduleRepositoryPort repo;
 
     public GetScheduleUseCase(ScheduleRepositoryPort repo) {

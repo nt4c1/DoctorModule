@@ -1,7 +1,8 @@
 package com.health.doctor.adapters.input.rest;
 
 import com.health.doctor.adapters.input.rest.dto.*;
-import com.health.doctor.application.usecase.*;
+import com.health.doctor.application.usecase.implementtion.*;
+import com.health.doctor.application.usecase.interfaces.*;
 import com.health.doctor.domain.model.Appointment;
 import com.health.doctor.domain.model.AppointmentStatus;
 import com.health.doctor.domain.ports.AppointmentRepositoryPort;
@@ -16,11 +17,11 @@ import java.util.UUID;
 @Controller("/appointments")
 public class AppointmentController {
 
-    private final CreateAppointmentUseCase createUseCase;
-    private final GetAppointmentsUseCase getUseCase;
-    private final GetPendingAppointmentsUseCase pendingUseCase;
-    private final AcceptAppointmentUseCase acceptUseCase;
-    private final PostponeAppointmentUseCase postponeUseCase;
+    private final CreateAppointmentUseCaseInterface createUseCase;
+    private final GetAppointmentsUseCaseInterface getUseCase;
+    private final GetPendingAppointmentsUseCaseInterface pendingUseCase;
+    private final AcceptAppointmentUseCaseInterface acceptUseCase;
+    private final PostponeAppointmentUseCaseInterface postponeUseCase;
     private final AppointmentRepositoryPort appointmentRepo;
 
     public AppointmentController(CreateAppointmentUseCase createUseCase,
@@ -46,7 +47,7 @@ public class AppointmentController {
 
     @ExecuteOn(TaskExecutors.BLOCKING)
     @Get("/{doctorId}")
-    public List<Appointment> get(@PathVariable UUID doctorId, @QueryValue LocalDate date) {
+    public List<Appointment> get(@PathVariable UUID doctorId, @QueryValue LocalDate date) { //path variable le raw value use garne queryvalue le attribute= ma line
         return getUseCase.execute(doctorId, date);
     }
 

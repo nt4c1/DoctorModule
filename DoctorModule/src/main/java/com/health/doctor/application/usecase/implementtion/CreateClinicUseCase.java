@@ -1,6 +1,7 @@
-package com.health.doctor.application.usecase;
+package com.health.doctor.application.usecase.implementtion;
 
 import com.health.doctor.application.service.LocationService;
+import com.health.doctor.application.usecase.interfaces.CreateClinicUseCaseInterface;
 import com.health.doctor.domain.model.Clinic;
 import com.health.doctor.domain.model.Location;
 import com.health.doctor.domain.ports.ClinicRepositoryPort;
@@ -9,7 +10,7 @@ import jakarta.inject.Singleton;
 import java.util.UUID;
 
 @Singleton
-public class CreateClinicUseCase {
+public class CreateClinicUseCase implements CreateClinicUseCaseInterface {
 
     private final ClinicRepositoryPort repo;
     private final LocationService locationService;

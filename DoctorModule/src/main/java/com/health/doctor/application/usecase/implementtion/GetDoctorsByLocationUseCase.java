@@ -1,6 +1,7 @@
-package com.health.doctor.application.usecase;
+package com.health.doctor.application.usecase.implementtion;
 
 import com.health.doctor.application.service.LocationService;
+import com.health.doctor.application.usecase.interfaces.GetDoctorsByLocationUseCaseInterface;
 import com.health.doctor.domain.model.Doctor;
 import com.health.doctor.domain.model.Location;
 import com.health.doctor.domain.ports.DoctorRepositoryPort;
@@ -10,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 @Slf4j
 @Singleton
-public class GetDoctorsByLocationUseCase {
+public class GetDoctorsByLocationUseCase implements GetDoctorsByLocationUseCaseInterface {
 
     private final DoctorRepositoryPort repo;
     private final LocationService locationService;

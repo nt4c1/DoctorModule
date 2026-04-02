@@ -1,14 +1,13 @@
-package com.health.doctor.application.usecase;
+package com.health.doctor.application.usecase.implementtion;
 
+import com.health.doctor.application.usecase.interfaces.AcceptAppointmentUseCaseInterface;
 import com.health.doctor.domain.model.Appointment;
 import com.health.doctor.domain.model.AppointmentStatus;
 import com.health.doctor.domain.ports.AppointmentRepositoryPort;
 import jakarta.inject.Singleton;
 
-import java.util.UUID;
-
 @Singleton
-public class AcceptAppointmentUseCase {
+public class AcceptAppointmentUseCase implements AcceptAppointmentUseCaseInterface {
     private final AppointmentRepositoryPort repo;
 
     public AcceptAppointmentUseCase(AppointmentRepositoryPort repo) {

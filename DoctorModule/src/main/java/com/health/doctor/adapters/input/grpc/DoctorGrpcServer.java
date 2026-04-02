@@ -1,6 +1,7 @@
 package com.health.doctor.adapters.input.grpc;
 
-import com.health.doctor.application.usecase.*;
+import com.health.doctor.application.usecase.implementtion.*;
+import com.health.doctor.application.usecase.interfaces.*;
 import com.health.doctor.domain.model.*;
 import com.health.doctor.domain.ports.AppointmentRepositoryPort;
 import com.health.doctor.domain.ports.DoctorRepositoryPort;
@@ -19,14 +20,14 @@ import java.util.stream.Collectors;
 @Singleton
 public class DoctorGrpcServer extends DoctorGrpcServiceGrpc.DoctorGrpcServiceImplBase {
 
-    private final GetDoctorsByLocationUseCase locationUseCase;
-    private final GetScheduleUseCase scheduleUseCase;
-    private final GetAppointmentsUseCase appointmentsUseCase;
-    private final GetPendingAppointmentsUseCase pendingUseCase;
-    private final AcceptAppointmentUseCase acceptUseCase;
-    private final PostponeAppointmentUseCase postponeUseCase;
-    private final UpdateDoctorLocationUseCase updateLocationUseCase;
-    private final CreateAppointmentUseCase createAppointmentUseCase;
+    private final GetDoctorsByLocationUseCaseInterface locationUseCase;
+    private final GetScheduleUseCaseInterface scheduleUseCase;
+    private final GetAppointmentsUseCaseInterface appointmentsUseCase;
+    private final GetPendingAppointmentsUseCaseInterface pendingUseCase;
+    private final AcceptAppointmentUseCaseInterface acceptUseCase;
+    private final PostponeAppointmentUseCaseInterface postponeUseCase;
+    private final UpdateDoctorLocationUseCaseInterface updateLocationUseCase;
+    private final CreateAppointmentUseCaseInterface createAppointmentUseCase;
     private final DoctorRepositoryPort doctorRepo;
     private final AppointmentRepositoryPort appointmentRepo;
 

@@ -1,5 +1,6 @@
-package com.health.doctor.application.usecase;
+package com.health.doctor.application.usecase.implementtion;
 
+import com.health.doctor.application.usecase.interfaces.CreateDoctorUseCaseInterface;
 import com.health.doctor.domain.model.Doctor;
 import com.health.doctor.domain.model.DoctorType;
 import com.health.doctor.domain.ports.DoctorRepositoryPort;
@@ -8,9 +9,10 @@ import jakarta.inject.Singleton;
 import java.util.UUID;
 
 @Singleton
-public class CreateDoctorUseCase {
+public class CreateDoctorUseCase implements CreateDoctorUseCaseInterface {
 
     private final DoctorRepositoryPort repo;
+
 
     public CreateDoctorUseCase(DoctorRepositoryPort repo) {
         this.repo = repo;

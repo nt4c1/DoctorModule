@@ -1,7 +1,8 @@
 package com.health.doctor.adapters.input.rest;
 
 import com.health.doctor.adapters.input.rest.dto.*;
-import com.health.doctor.application.usecase.*;
+import com.health.doctor.application.usecase.implementtion.*;
+import com.health.doctor.application.usecase.interfaces.*;
 import com.health.doctor.domain.model.Doctor;
 import com.health.doctor.domain.model.DoctorType;
 import io.micronaut.http.annotation.*;
@@ -14,12 +15,12 @@ import java.util.UUID;
 @Controller("/doctor")
 public class DoctorController {
 
-    private final CreateDoctorUseCase createDoctor;
-    private final CreateClinicUseCase createClinic;
-    private final UpdateDoctorLocationUseCase updateLocation;
-    private final GetDoctorsByLocationUseCase searchUseCase;
-    private final GetDoctorsByClinicUseCase clinicUseCase;
-    private final CreateScheduleUseCase createSchedule;
+    private final CreateDoctorUseCaseInterface createDoctor;
+    private final CreateClinicUseCaseInterface createClinic;
+    private final UpdateDoctorLocationUseCaseInterface updateLocation;
+    private final GetDoctorsByLocationUseCaseInterface searchUseCase;
+    private final GetDoctorsByClinicUseCaseInterface clinicUseCase;
+    private final CreateScheduleUseCaseInterface createSchedule;
 
     public DoctorController(CreateDoctorUseCase createDoctor,
                             CreateClinicUseCase createClinic,

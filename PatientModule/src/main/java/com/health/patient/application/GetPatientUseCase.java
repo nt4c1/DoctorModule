@@ -6,7 +6,7 @@ import jakarta.inject.Singleton;
 import java.util.UUID;
 
 @Singleton
-public class GetPatientUseCase {
+public class GetPatientUseCase implements GetPatientUseCaseInterface{
     private final PatientRepositoryPort repo;
 
     public GetPatientUseCase(PatientRepositoryPort repo) {

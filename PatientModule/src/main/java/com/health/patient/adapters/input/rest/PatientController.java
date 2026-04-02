@@ -6,6 +6,7 @@ import com.health.grpc.doctor.GetScheduleResponse;
 import com.health.patient.adapters.input.rest.dto.*;
 import com.health.patient.adapters.output.grpc.DoctorGrpcClient;
 import com.health.patient.application.CreatePatientUseCase;
+import com.health.patient.application.CreatePatientUseCaseInterface;
 import io.micronaut.http.annotation.*;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @Controller("/patient")
 public class PatientController {
 
-    private final CreatePatientUseCase createPatient;
+    private final CreatePatientUseCaseInterface createPatient;
     private final DoctorGrpcClient doctorGrpcClient;
 
     public PatientController(CreatePatientUseCase createPatient,

@@ -1,5 +1,6 @@
-package com.health.doctor.application.usecase;
+package com.health.doctor.application.usecase.implementtion;
 
+import com.health.doctor.application.usecase.interfaces.CreateAppointmentUseCaseInterface;
 import com.health.doctor.domain.model.Appointment;
 import com.health.doctor.domain.model.AppointmentStatus;
 import com.health.doctor.domain.model.DoctorSchedule;
@@ -11,7 +12,7 @@ import java.time.*;
 import java.util.UUID;
 
 @Singleton
-public class CreateAppointmentUseCase {
+public class CreateAppointmentUseCase implements CreateAppointmentUseCaseInterface {
     private static final ZoneId NPT = ZoneId.of("Asia/Kathmandu");
 
     private final AppointmentRepositoryPort repo;
@@ -22,7 +23,7 @@ public class CreateAppointmentUseCase {
         this.scheduleRepo = scheduleRepo;
     }
 
-    public void execute(UUID doctorId,
+    public UUID execute(UUID doctorId,
                         UUID patientId,
                         LocalDate date,
                         LocalTime time) {
@@ -43,8 +44,9 @@ public class CreateAppointmentUseCase {
             throw new RuntimeException("Time " + time + " is outside working hours or not a valid slot");
         }
 
+        var appointmentId = UUID.randomUUID();
         Appointment appointment = new Appointment(
-                UUID.randomUUID(),
+                appointmentId,
                 doctorId,
                 patientId,
                 date,
@@ -55,5 +57,6 @@ public class CreateAppointmentUseCase {
         );
 
         repo.save(appointment);
+        return appointmentId;
     }
 }

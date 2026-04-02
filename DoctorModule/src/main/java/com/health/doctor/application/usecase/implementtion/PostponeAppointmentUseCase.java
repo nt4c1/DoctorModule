@@ -1,5 +1,6 @@
-package com.health.doctor.application.usecase;
+package com.health.doctor.application.usecase.implementtion;
 
+import com.health.doctor.application.usecase.interfaces.PostponeAppointmentUseCaseInterface;
 import com.health.doctor.domain.model.Appointment;
 import com.health.doctor.domain.model.AppointmentStatus;
 import com.health.doctor.domain.ports.AppointmentRepositoryPort;
@@ -8,10 +9,9 @@ import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @Singleton
-public class PostponeAppointmentUseCase {
+public class PostponeAppointmentUseCase implements PostponeAppointmentUseCaseInterface {
     private final AppointmentRepositoryPort repo;
 
     public PostponeAppointmentUseCase(AppointmentRepositoryPort repo) {
