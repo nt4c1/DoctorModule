@@ -17,7 +17,7 @@ public class UpdateStatusRequest {
     private UUID appointmentId;
     private UUID doctorId;
     private LocalDate date;
-    private LocalTime time;
+    private Instant time;
     private UUID patientId;
     private String currentStatus;
 

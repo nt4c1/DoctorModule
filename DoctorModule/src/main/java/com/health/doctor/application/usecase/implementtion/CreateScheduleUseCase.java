@@ -22,8 +22,8 @@ public class CreateScheduleUseCase implements CreateScheduleUseCaseInterface {
 
     Instant now = ZonedDateTime.now(NPT).toInstant();
 
-    public void execute(UUID doctorId, Set<String> workingDays, LocalTime startTime,
-                        LocalTime endTime, int slotDuration, int maxPerDay) {
+    public void execute(UUID doctorId, Set<String> workingDays, Instant startTime,
+                        Instant endTime, int slotDuration, int maxPerDay) {
         Set<DayOfWeek> days = workingDays.stream()
                 .map(DayOfWeek::valueOf)
                 .collect(Collectors.toSet());

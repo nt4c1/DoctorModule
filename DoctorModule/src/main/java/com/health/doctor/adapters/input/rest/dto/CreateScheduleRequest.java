@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Set;
 import java.util.UUID;
@@ -16,8 +17,8 @@ import java.util.UUID;
 public class CreateScheduleRequest {
     private UUID doctorId;
     private Set<String> workingDays;  // e.g. ["MONDAY","TUESDAY"]
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private Instant startTime;
+    private Instant endTime;
     private int slotDurationMinutes;
     private int maxAppointmentsPerDay;
 }

@@ -3,6 +3,7 @@ package com.health.patient.domain.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -14,11 +15,11 @@ public class Appointment {
     private UUID doctorId;
     private UUID patientId;
     private LocalDate date;
-    private LocalTime time;
+    private Instant time;
     private String status;
 
     public Appointment(UUID id, UUID doctorId, UUID patientId,
-                       LocalDate date, LocalTime time, String status) {
+                       LocalDate date, Instant time, String status) {
         this.id = id;
         this.doctorId = doctorId;
         this.patientId = patientId;

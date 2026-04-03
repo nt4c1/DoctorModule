@@ -57,8 +57,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryPort {
         return new DoctorSchedule(
                 r.getUuid("doctor_id"),
                 days,
-                r.getLocalTime("start_time"),
-                r.getLocalTime("end_time"),
+//                r.getLocalTime("start_time"),
+//                r.getLocalTime("end_time"),
+                r.getInstant("start_time"),
+                r.getInstant("end_time"),
                 r.getInt("slot_duration_minutes"),
                 r.getInt("max_appointments_day")
         );

@@ -26,7 +26,7 @@ public class CreateAppointmentUseCase implements CreateAppointmentUseCaseInterfa
     public UUID execute(UUID doctorId,
                         UUID patientId,
                         LocalDate date,
-                        LocalTime time) {
+                        Instant time) {
 
         Instant now = ZonedDateTime.now(NPT).toInstant();
 

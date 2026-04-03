@@ -114,7 +114,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepositoryPort {
             list.add(new Appointment(
                     r.getUuid("appointment_id"), r.getUuid("doctor_id"),
                     r.getUuid("patient_id"), r.getLocalDate("appointment_date"),
-                    r.getLocalTime("scheduled_time"), AppointmentStatus.valueOf(status),
+                    r.getInstant("scheduled_time"), AppointmentStatus.valueOf(status),
                     null, null
             ));
         }
@@ -137,7 +137,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepositoryPort {
             list.add(new Appointment(
                     r.getUuid("appointment_id"), r.getUuid("doctor_id"),
                     r.getUuid("patient_id"), r.getLocalDate("appointment_date"),
-                    r.getLocalTime("scheduled_time"),
+                    r.getInstant("scheduled_time"),
                     AppointmentStatus.valueOf(r.getString("status")),
                     null, null
             ));
@@ -228,7 +228,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepositoryPort {
         return new Appointment(
                 r.getUuid("appointment_id"), r.getUuid("doctor_id"),
                 r.getUuid("patient_id"), r.getLocalDate("appointment_date"),
-                r.getLocalTime("scheduled_time"),
+                r.getInstant("scheduled_time"),
                 AppointmentStatus.valueOf(r.getString("status")),
                 r.getInstant("created_at"), r.getInstant("updated_at")
         );

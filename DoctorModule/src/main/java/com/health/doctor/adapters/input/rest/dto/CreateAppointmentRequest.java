@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -18,6 +19,6 @@ public class CreateAppointmentRequest {
     private UUID doctorId;
     private UUID patientId;
     private LocalDate date;
-    private LocalTime time;
+    private Instant time;
 
 }

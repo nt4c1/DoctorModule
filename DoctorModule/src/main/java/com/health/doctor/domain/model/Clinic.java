@@ -1,7 +1,12 @@
 package com.health.doctor.domain.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
+@Setter
+@Getter
 public class Clinic {
     private UUID id;
     private String name;
@@ -15,35 +20,4 @@ public class Clinic {
         this.isActive = isActive;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 }
